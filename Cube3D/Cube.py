@@ -39,7 +39,7 @@ class Cube:
             point_2d = MatrixMath.multiply_matrix(self.projection_matrix.get_projection_matrix(), rotate_z)
             self.point_2d[i] = self._define_scale_and_position_point(point_2d)
             i += 1
-        # print(self.point_2d)
+        # print(self.point_2d[0])
         return self.point_2d
 
     def _define_scale_and_position_point(self, point_2d: list):

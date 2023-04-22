@@ -24,7 +24,7 @@ class MatrixMath:
         if matrix_a_columns == matrix_b_rows:
             # Dot product matrix dimensions = matrix_a_rows x matrix_b_columns
             product = [[0 for col in range(matrix_b_columns)]
-                       for y in range(matrix_a_rows)]
+                       for row in range(matrix_a_rows)]
             # row by column
             for row_a in range(matrix_a_rows):
                 for column_b in range(matrix_b_columns):

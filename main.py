@@ -1,12 +1,5 @@
-from typing import Type
 import pygame
-import Components.RotationZ as RotationZ
-import Components.MatrixMath as MatrixMath
 from Components.Point import Point
-from Components.ProjectionMatrix import ProjectionMatrix
-from Components.RotationX import RotationX
-from Components.RotationY import RotationY
-from Lib.StringHelper import StringHelper
 from Cube3D.Cube import Cube
 
 # Cube setup
@@ -18,21 +11,6 @@ ANGLE_X = 0
 ANGLE_Y = 0
 ANGLE_Z = 0
 ROTATE_SPEED = 0.02
-
-
-def connect_points(points):
-    connect(0, 1, points)
-    connect(0, 3, points)
-    connect(0, 4, points)
-    connect(1, 2, points)
-    connect(1, 5, points)
-    connect(2, 6, points)
-    connect(2, 3, points)
-    connect(3, 7, points)
-    connect(4, 5, points)
-    connect(4, 7, points)
-    connect(6, 5, points)
-    connect(6, 7, points)
 
 
 """
@@ -48,6 +26,20 @@ def connect_points(points):
     
     4 is origin, 4-5=x, 0-4=z, 4-7=y
 """
+
+def connect_points(points):
+    connect(0, 1, points)
+    connect(0, 3, points)
+    connect(0, 4, points)
+    connect(1, 2, points)
+    connect(1, 5, points)
+    connect(2, 6, points)
+    connect(2, 3, points)
+    connect(3, 7, points)
+    connect(4, 5, points)
+    connect(4, 7, points)
+    connect(6, 5, points)
+    connect(6, 7, points)
 
 
 def connect(pi, pj, points):
@@ -96,48 +88,6 @@ if __name__ == '__main__':
     point_list.append(Point(1, 1, -1).point_3d)
     # cube point 8
     point_list.append(Point(-1, 1, -1).point_3d)
-    #
-    # print()
-    # print('Cube points: ')
-    # print()
-    # StringHelper.print_matrix(point_list)
-    #
-    # print()
-    # print('Projection matrix: ')
-    # print()
-    # proj_matrix = ProjectionMatrix().get_projection_matrix()
-    # StringHelper.print_matrix(proj_matrix)
-    #
-    # # gen rotation matrice for x
-    # print()
-    # print('Rotation matrix for X: ')
-    # print()
-    # rotation_x_matrix_object = RotationX()
-    # rotation_x_matrix = rotation_x_matrix_object.gen_x_matrix(2)
-    # StringHelper.print_matrix(rotation_x_matrix)
-    #
-    # # gen rotation matrice for y
-    # print()
-    # print('Rotation matrix for Y: ')
-    # print()
-    # rotation_y_matrix_object = RotationY()
-    # rotation_y_matrix = rotation_y_matrix_object.gen_y_matrix(2)
-    # StringHelper.print_matrix(rotation_y_matrix)
-    #
-    # # gen rotation matrice for z
-    # print()
-    # print('Rotation matrix for Z: ')
-    # print()
-    # rotation_z_matrix_object = RotationZ.RotationZ()
-    # rotation_z_matrix = rotation_z_matrix_object.gen_z_matrix(2)
-    # StringHelper.print_matrix(rotation_z_matrix)
-    #
-    # # testing multiplication of matrices
-    # print(point_list[0])
-    # matrixMath = MatrixMath.MatrixMath()
-    # rotated_matrix = matrixMath.multiply_matrix(rotation_x_matrix, point_list[0])
-    # rotated_matrix = matrixMath.multiply_matrix(rotation_y_matrix, rotated_matrix)
-    # matrixMath.multiply_matrix(rotation_z_matrix, rotated_matrix)
 
     # Cube class
     cube_point_list: list[Point] = []
@@ -163,7 +113,7 @@ if __name__ == '__main__':
     cube_a = Cube(cube_point_list)
     # Pygame setup
     pygame.init()
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_WIDTH))
     clock = pygame.time.Clock()
     running = True
 
@@ -180,9 +130,7 @@ if __name__ == '__main__':
         rotated_points = cube_a.calculate_rotation(ANGLE_X, ANGLE_Y, ANGLE_Z)
         for rotated_point in range(len(rotated_points)):
             # print(f' rotated point = {rotated_points[rotated_point][0]}')
-            pygame.draw.circle(screen, 'purple',
-                               (rotated_points[rotated_point][0], rotated_points[rotated_point][1]),
-                               4)
+            pygame.draw.circle(screen, 'purple', (rotated_points[rotated_point][0], rotated_points[rotated_point][1]), 4)
         connect_points(rotated_points)
 
         x_origin = [rotated_points[4][0], rotated_points[4][1]]
@@ -194,7 +142,6 @@ if __name__ == '__main__':
         y_axis = pygame.draw.line(screen, 'green', (x_origin[0], x_origin[1]), (y_origin[0], y_origin[1]), 3)
         z_axis = pygame.draw.line(screen, 'blue', (x_origin[0], x_origin[1]), (z_origin[0], z_origin[1]), 3)
 
-        # inspired by https://github.com/yuta-51/3DProjection/blob/242170627cad37571a77c10c3cb7e62193263a7c/3dproj.py#L13
         # Pool for events from pygame
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

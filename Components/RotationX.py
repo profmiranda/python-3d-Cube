@@ -14,5 +14,5 @@ class RotationX(RotationMatrix):
         self.rotation_matrix_x[1][1] = cos(theta)
         self.rotation_matrix_x[1][2] = -sin(theta)
         self.rotation_matrix_x[2][1] = sin(theta)
-        self.rotation_matrix_x[2][1] = cos(theta)
+        self.rotation_matrix_x[2][2] = cos(theta)
         return self.rotation_matrix_x
