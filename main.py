@@ -1,4 +1,5 @@
 import pygame
+import math
 from Components.Point import Point
 from Cube3D.Cube import Cube
 
@@ -11,6 +12,8 @@ ANGLE_X = 0
 ANGLE_Y = 0
 ANGLE_Z = 0
 ROTATE_SPEED = 0.02
+IMG_SCALE = (100, 100)
+
 
 
 """
@@ -25,6 +28,8 @@ ROTATE_SPEED = 0.02
     0-------1
     
     4 is origin, 4-5=x, 0-4=z, 4-7=y
+    
+    for image -> 7-4 left, 6-7 top, 6-5 right, 5-4 bottom 
 """
 
 def connect_points(points):
@@ -48,46 +53,7 @@ def connect(pi, pj, points):
 
 
 if __name__ == '__main__':
-    # Cube setup
-    # no OOP
-    # cube_3d_points = [n for n in range(TOTAL_CUBE_POINTS)]
 
-    # print(cube_3d_points)
-    # print(cube_3d_points.__class__)
-
-    # cube_3d_points[0] = [[-1], [-1], [1]]
-    # cube_3d_points[1] = [[1], [-1], [1]]
-    # cube_3d_points[2] = [[1], [1], [1]]
-    # cube_3d_points[3] = [[-1], [1], [1]]
-    # cube_3d_points[4] = [[-1], [-1], [-1]]
-    # cube_3d_points[5] = [[1], [-1], [-1]]
-    # cube_3d_points[6] = [[1], [1], [-1]]
-    # cube_3d_points[7] = [[-1], [1], [-1]]
-
-    # print(cube_3d_points)
-    # StringHelper.print_3d_point(point=None, point_list=cube_3d_points[0])
-    # StringHelper.print_3d_point(point=None, point_list=cube_3d_points[0][1])
-    # StringHelper.print_3d_point(point=None, point_list=cube_3d_points[0][2])
-
-    # With OOP
-    point_list: list[list] = []
-
-    # cube point 1
-    point_list.append(Point(-1, -1, 1).point_3d)
-    # cube point 2
-    point_list.append(Point(1, -1, 1).point_3d)
-    # cube point 3
-    point_list.append(Point(1, 1, 1).point_3d)
-    # cube point 4
-    point_list.append(Point(-1, 1, 1).point_3d)
-    # cube point 5
-    point_list.append(Point(-1, -1, -1).point_3d)
-    # cube point 6
-    point_list.append(Point(1, -1, -1).point_3d)
-    # cube point 7
-    point_list.append(Point(1, 1, -1).point_3d)
-    # cube point 8
-    point_list.append(Point(-1, 1, -1).point_3d)
 
     # Cube class
     cube_point_list: list[Point] = []
@@ -117,6 +83,9 @@ if __name__ == '__main__':
     clock = pygame.time.Clock()
     running = True
 
+    # cube faces
+    face_0 = pygame.image.load('./01.png').convert_alpha()
+
     # Pygame draw loop
     while running:
         # fill screen with color to clean last frame
@@ -136,11 +105,27 @@ if __name__ == '__main__':
         x_origin = [rotated_points[4][0], rotated_points[4][1]]
         x_end = [rotated_points[5][0], rotated_points[5][1]]
         y_origin = [rotated_points[7][0], rotated_points[7][1]]
+        y_end = [rotated_points[6][0], rotated_points[6][1]]
         z_origin = [rotated_points[0][0], rotated_points[0][1]]
 
         x_axis = pygame.draw.line(screen, 'red', (x_origin[0], x_origin[1]), (x_end[0], x_end[1]), 3)
         y_axis = pygame.draw.line(screen, 'green', (x_origin[0], x_origin[1]), (y_origin[0], y_origin[1]), 3)
         z_axis = pygame.draw.line(screen, 'blue', (x_origin[0], x_origin[1]), (z_origin[0], z_origin[1]), 3)
+        # print(f'({abs((x_end[0] - x_origin[0]))}, {abs((y_origin[1] - x_origin[1]))})')
+        # face_0 = pygame.transform.scale(face_0, (abs((x_end[0] - x_origin[0])), abs((y_origin[1] - x_origin[1]))))
+        face_0 = pygame.transform.scale(face_0, IMG_SCALE)
+        # for image -> 7-4 left, 6-7 top, 6-5 right, 5-4 bottom
+        rect_0 = pygame.Rect(abs(y_origin[0] - x_origin[0]), abs(y_end[0] - y_origin[0]), IMG_SCALE[0], IMG_SCALE[1])
+        """
+        https://stackoverflow.com/questions/15022630/how-to-calculate-the-angle-from-rotation-matrix
+        """
+        #face_0 = pygame.transform.rotate(face_0, (math.atan2(cube_a.rotation_matrix_x[2][1], cube_a.rotation_matrix_x[2][2]))*180/math.pi)
+        #face_0 = pygame.transform.rotate(face_0, (math.atan2(-(cube_a.rotation_matrix_y[2][0]),
+                                                           # math.sqrt(((cube_a.rotation_matrix_y[2][1])**2) + (cube_a.rotation_matrix_y[2][2]**2))
+                                                          #  ))*180/math.pi)
+        #face_0 = pygame.transform.rotate(face_0, (math.atan2(cube_a.rotation_matrix_z[1][0], cube_a.rotation_matrix_x[0][0])*180/math.pi))
+        #screen.blit(face_0, x_origin, rect_0)
+        screen.blit(face_0, ([x_origin[0], x_end[0], y_origin[0], y_end[0]]))
 
         # Pool for events from pygame
         for event in pygame.event.get():
